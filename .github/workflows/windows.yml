@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [x86, x64]
+        arch: [x86, x64, amd64_arm64]
 
     steps:
       - uses: actions/checkout@v4
@@ -26,6 +26,9 @@ jobs:
           $sslTarget = "VC-WIN32"
           if ($env:MATRIX_ARCH -eq 'x64') {
             $sslTarget = "VC-WIN64A"
+          }
+          if ($env:MATRIX_ARCH -eq 'amd64_arm64') {
+            $sslTarget = "VC-WIN64-ARM"
           }
 
           Set-Location .\openssl
@@ -62,6 +65,9 @@ jobs:
           $platDir = "Win32"
           if ($env:MATRIX_ARCH -eq 'x64') {
             $platDir = "x64"
+          }
+          if ($env:MATRIX_ARCH -eq 'amd64_arm64') {
+            $platDir = "arm64"
           }
           $iconvLib = Join-Path $env:GITHUB_WORKSPACE "libiconv\MSVC17\$platDir\lib"
           $iconvInc = Join-Path $env:GITHUB_WORKSPACE libiconv\source\include
@@ -138,6 +144,9 @@ jobs:
           $distName = "win32"
           if ($env:MATRIX_ARCH -eq 'x64') {
             $distName = "win64"
+          }
+          if ($env:MATRIX_ARCH -eq 'amd64_arm64') {
+            $distName = "win-arm64"
           }
 
           Function BundleRelease($name, $lib, $inc)
