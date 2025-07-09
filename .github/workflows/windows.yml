@@ -118,8 +118,9 @@ jobs:
       - name: Build xmlsec
         run: |
           Set-Location .\xmlsec\win32
+          # crypto=openssl because mscng doesn't support sha224. See also https://github.com/lsh123/xmlsec/issues/935
           # werror=no is a temporary workaround for: 'LIBXML_ICONV_ENABLED': macro redefinition
-          cscript configure.js lib="$env:ZLIB_LIB;$env:ICONV_LIB;$env:XML_LIB;$env:SSL_LIB;$env:XSLT_LIB" include="$env:ZLIB_INC;$env:ICONV_INC;$env:XML_INC;$env:SSL_INC;$env:XSLT_INC" iconv=yes xslt=yes unicode=yes static=yes with-dl=no legacy-crypto=yes werror=no
+          cscript configure.js lib="$env:ZLIB_LIB;$env:ICONV_LIB;$env:XML_LIB;$env:SSL_LIB;$env:XSLT_LIB" include="$env:ZLIB_INC;$env:ICONV_INC;$env:XML_INC;$env:SSL_INC;$env:XSLT_INC" crypto=openssl iconv=yes xslt=yes unicode=yes static=yes with-dl=no legacy-features=yes werror=no
           Start-Process -NoNewWindow -Wait -PassThru nmake xmlseca
 
           $xmlsecLib = Join-Path $env:GITHUB_WORKSPACE xmlsec\win32\binaries
